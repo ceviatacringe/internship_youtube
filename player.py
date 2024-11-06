@@ -1,17 +1,18 @@
 import os
 import time
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.common.by import By
-import pygetwindow as gw
 import win32gui
 import win32con
 import threading
+from log import logger
+import pygetwindow as gw
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 
 class YouTubeAutomation:
@@ -32,18 +33,21 @@ class YouTubeAutomation:
         self.chrome_options.add_argument("--window-name=AlexBrowser")      
         # Install pre-downloaded uBlock Origin extension crx
         try:
+            logger.info("Loading Adblock...")
             crx_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ublock.crx')
             self.chrome_options.add_extension(crx_path)
             self.adblock = True
-            print("Successfully loaded adblock.")
-        except:
-            #This should never really happen
-            print("Failed to load adblock")
+            logger.info("Successfully loaded Adblock.")
+            # Give adblock time to properly load
+            time.sleep(1)
+        except Exception as e:
+            logger.error(f"Error loading Adblock: {e}")
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.chrome_options)
         self.driver.delete_all_cookies() # Clean up old caches from previous runs in case it didn't properly exit
         self.window = gw.getWindowsWithTitle("AlexBrowser")[0]
         self.hide_window() # Hide the window then reveal it later when a link is opened
         self.driver.get('https://www.youtube.com/')
+        logger.info("Rejecting cookies.")
         self.reject_cookies()
 
     def start_video(self, link):
@@ -51,19 +55,21 @@ class YouTubeAutomation:
         Check if the video is available, then start playing it if it doesn't start automatically.
         """
         self.driver.get(link)
+        logger.info(f"Opening link: {link}")
         self.show_window()
         self.check_available()
         # Sometimes the video doesn't start automatically, this clicks the play button
         # (Happens frequently with adblock disabled)
+        logger.info("Looking for play button.")
         if not self.unavailable:
             try:
                     big_play_button = WebDriverWait(self.driver, 5).until(
                         EC.element_to_be_clickable((By.CLASS_NAME, "ytp-large-play-button"))
                     )
                     big_play_button.click()
-                    print("Clicked play button")
-            except:
-                    print("Play button not found") 
+                    logger.info("Clicked play button.")
+            except Exception as e:
+                    logger.info(f"Unable to handle button: {e}") 
 
     def reject_cookies(self):
         """
@@ -75,25 +81,25 @@ class YouTubeAutomation:
                 EC.element_to_be_clickable((By.XPATH, "//button[.//span[text()='Reject all']]"))
             )
             button.click()
-            print("Clicked the 'Reject all' button.")
+            logger.info("Clicked the 'Reject all' button (cookies).")
         except NoSuchElementException:
-            print("Button not found.")
+            logger.error("Reject cookies page/button not found.")
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.info(f"Error in cookie reject: {e}")
 
     def monitor_popups(self):
+        logger.info("Started popup monitor.")
         while True:
             time.sleep(0.1)
             if not self.unavailable:
                 if not self.adblock:
                     try:
-                        print("Looking for ad")
                         # Check for "Skip" button for ads
                         skip_ad_button = WebDriverWait(self.driver, 0.4).until(
                             EC.element_to_be_clickable((By.CLASS_NAME, "ytp-skip-ad-button"))
                         )
                         skip_ad_button.click()
-                        print("Clicked 'Skip Ad' button.")
+                        logger.info("Clicked 'Skip Ad' button.")
 
                     except Exception:
                         # No ad skip button found
@@ -105,7 +111,7 @@ class YouTubeAutomation:
                         EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Yes')]"))
                     )
                     still_watching_button.click()
-                    print("Clicked 'Are you still watching?' confirmation.")
+                    logger.info("Clicked 'Are you still watching?' confirmation.")
 
                 except Exception:
                     pass
@@ -116,7 +122,7 @@ class YouTubeAutomation:
                         EC.visibility_of_element_located((By.XPATH, "//div[contains(text(), 'error')]"))
                     )
                     self.driver.refresh()  # Refresh page to attempt recovery
-                    print("Error detected, refreshing page to recover.")
+                    logger.info("Error detected, refreshing page to recover.")
 
                 except Exception:
                     # No error popup found; continue loop
@@ -136,21 +142,21 @@ class YouTubeAutomation:
             # Check if the element is displayed
             if element.is_displayed():
                 self.unavailable = False
-                print("The element is displayed.")
+                logger.info("The element is displayed.")
             else:
                 self.unavailable = True
-                print("The element is not displayed.")
+                logger.info("The element is not displayed.")
         
         except TimeoutException:
             # Handle the exception if the element is not found within the given time
             self.unavailable = True
-            print("Timeout reached while waiting for the element.")
+            logger.info("Timeout reached while waiting for the element.")
             # Optionally, take a screenshot for debugging
             self.driver.save_screenshot('timeout_screenshot.png')
         except Exception as e:
             # Catch other exceptions that might occur
             self.unavailable = True
-            print(f"An error occurred: {e}")
+            logger.info(f"An error occurred: {e}")
 
 
     def hide_window(self):
@@ -158,32 +164,55 @@ class YouTubeAutomation:
         Completely hides the window.
         """
         win32gui.ShowWindow(self.window._hWnd, win32con.SW_HIDE)
+        logger.info("Fully hiding window.")
 
     def show_window(self):
         """
         Restores and maximizes the Chrome window, and brings it to the foreground.
         """
-        win32gui.ShowWindow(self.window._hWnd, win32con.SW_RESTORE)
-        self.window.activate()
-        self.driver.maximize_window()
+        try:
+            win32gui.ShowWindow(self.window._hWnd, win32con.SW_RESTORE)
+            logger.info("Attempting to reveal browser window.")
+
+            try:
+                self.window.activate()
+                logger.info("Bringing browser window to foreground.")
+            except Exception as e:
+                logger.warning(f"Failed to activate window normally: {e}")
+
+                # Attempt alternative method if activate() fails
+                win32gui.SetForegroundWindow(self.window._hWnd)
+                logger.info("Using alternative SetForegroundWindow method.")
+
+            # Ensure the window is maximized
+            self.driver.maximize_window()
+            logger.info("Maximizing driver window through Selenium.")
+        except Exception as e:
+            logger.error(f"Error in show_window: {e}")
+
 
     def clean_up(self):
         """
         Deletes all cookies and closes the browser session.
         """
+        logger.info("Cleaning up cache files.")
         self.driver.delete_all_cookies()
+        logger.info("Shutting down.")
         self.driver.quit()
 
     def run(self):
         """
         Executes the entire sequence of actions.
         """
+        logger.info("Starting up...")
         self.initialize_driver()
-        print("READY")
+        logger.info("Driver loaded.")
+        time.sleep(1)
         popup_monitor_thread = threading.Thread(target=self.monitor_popups)
         popup_monitor_thread.daemon = True
+        logger.info("Starting monitor thread")
         popup_monitor_thread.start()
-        self.start_video('https://www.youtube.com/watch?v=dfD85dGY03k&list=LL&index=4')
+        self.start_video('https://www.youtube.com/watch?v=zZZ-FZ03Sxk')
 
         time.sleep(500) # remove this later 
         self.clean_up()

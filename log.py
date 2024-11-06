@@ -1,9 +1,9 @@
-# log.py
 import logging
 
 # Configure the logger
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
+    # Might change later, I like this format for now
     format='%(asctime)s | %(levelname)s: %(message)s',
     handlers=[
         logging.FileHandler("app.log"),
