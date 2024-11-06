@@ -17,12 +17,15 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 
 class YouTubeAutomation:
-    def __init__(self):
+    def __init__(self, adblock=True, fullscreen=False):
         self.unavailable = True # If the video is private/invalid url/deleted
         self.driver = None
         self.window = None
         self.chrome_options = Options()
-        self.adblock = False
+        self.adblock = adblock
+        self.fullscreen = fullscreen
+        self.firstlink = True # Keep browser hidden till first link is requested
+        logger.info(f"Running Adblock: {self.adblock}, Fullscreen: {self.fullscreen}")
 
     def initialize_driver(self):
         """
@@ -33,31 +36,37 @@ class YouTubeAutomation:
         #If you want to change the name, also changed the getWindowsWithTitle below
         self.chrome_options.add_argument("--window-name=AlexBrowser")      
         # Install pre-downloaded uBlock Origin extension crx
-        try:
-            logger.info("Loading Adblock...")
-            if getattr(sys, 'frozen', False):
-                # If the script is compiled
-                base_path = os.path.dirname(sys.executable)
-            else:
-                # If running the script in Python
-                base_path = os.path.dirname(os.path.abspath(__file__))
-    
-            crx_path = os.path.join(base_path, 'ublock.crx')
-            logger.info(f"Assumed Ublock crx path: {crx_path}")
+        if self.adblock:
+            try:
+                logger.info("Loading Adblock...")
+                if getattr(sys, 'frozen', False):
+                    # If the script is compiled
+                    base_path = os.path.dirname(sys.executable)
+                else:
+                    # If running the script in Python
+                    base_path = os.path.dirname(os.path.abspath(__file__))
+        
+                crx_path = os.path.join(base_path, 'ublock.crx')
+                logger.info(f"Assumed Ublock crx path: {crx_path}")
 
-            self.chrome_options.add_extension(crx_path)
-            self.adblock = True
-            logger.info("Successfully loaded Adblock.")
-        except Exception as e:
-            logger.error(f"Error loading Adblock: {e}")
-            logger.info(f"Switching to non-adblock mode.")
+                self.chrome_options.add_extension(crx_path)
+                self.adblock = True
+                logger.info("Successfully loaded Adblock.")
+            except Exception as e:
+                logger.error(f"Error loading Adblock: {e}")
+                logger.info(f"Switching to non-Adblock mode.")
+        else:
+            logger.info("Running non-Adblock mode.")
+
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.chrome_options)
         self.driver.delete_all_cookies() # Clean up old caches from previous runs in case it didn't properly exit
+        logger.info("Cleaned up cache.")
         self.window = gw.getWindowsWithTitle("AlexBrowser")[0]
         self.hide_window() # Hide the window then reveal it later when a link is opened
         self.driver.get('https://www.youtube.com/')
         logger.info("Rejecting cookies.")
         self.reject_cookies()
+
 
     def start_video(self, link):
         """
@@ -65,20 +74,32 @@ class YouTubeAutomation:
         """
         self.driver.get(link)
         logger.info(f"Opening link: {link}")
-        self.show_window()
+        
+        # Start the popup monitor thread
+        if not hasattr(self, "popup_monitor_thread"):
+            self.popup_monitor_thread = threading.Thread(target=self.monitor_popups)
+            self.popup_monitor_thread.daemon = True  # Ensures it doesn't block the program
+            logger.info("Starting monitor thread")
+            self.popup_monitor_thread.start()
+        
+        # Reveal the window if it's the first time opening a link.
+        if self.firstlink:
+            self.show_window()
+            self.firstlink = False
+
         self.check_available()
-        # Sometimes the video doesn't start automatically, this clicks the play button
-        # (Happens frequently with adblock disabled)
-        logger.info("Looking for play button.")
-        if not self.unavailable:
+
+        # Sometimes the video doesn't start automatically, so we click the play button
+        if not self.unavailable and not self.adblock:
             try:
-                    big_play_button = WebDriverWait(self.driver, 5).until(
-                        EC.element_to_be_clickable((By.CLASS_NAME, "ytp-large-play-button"))
-                    )
-                    big_play_button.click()
-                    logger.info("Clicked play button.")
-            except Exception as e:
-                    logger.info(f"Unable to find button: {e}") 
+                big_play_button = WebDriverWait(self.driver, 2).until(
+                    EC.element_to_be_clickable((By.CLASS_NAME, "ytp-large-play-button"))
+                )
+                big_play_button.click()
+                logger.info("Clicked play button.")
+            except:
+                logger.info("Unable to find play button.")
+
 
     def reject_cookies(self):
         """
@@ -99,20 +120,21 @@ class YouTubeAutomation:
     def monitor_popups(self):
         logger.info("Started popup monitor.")
         while True:
-            time.sleep(0.1)
-            if not self.unavailable:
-                if not self.adblock:
-                    try:
-                        # Check for "Skip" button for ads
-                        skip_ad_button = WebDriverWait(self.driver, 0.4).until(
-                            EC.element_to_be_clickable((By.CLASS_NAME, "ytp-skip-ad-button"))
-                        )
-                        skip_ad_button.click()
-                        logger.info("Clicked 'Skip Ad' button.")
+            #if not self.unavailable:
+            time.sleep(0.2)
+            if not self.adblock:
+                try:
+                    # Check for "Skip" button for ads
+                    print("Looking for ad button")
+                    skip_ad_button = WebDriverWait(self.driver, 0.5).until(
+                        EC.element_to_be_clickable((By.CLASS_NAME, "ytp-skip-ad-button"))
+                    )
+                    skip_ad_button.click()
+                    logger.info("Clicked 'Skip Ad' button.")
 
-                    except Exception:
-                        # No ad skip button found
-                        pass
+                except Exception:
+                    # No ad skip button found
+                    pass
 
                 try:
                     # Check for "Are you still watching?" button
@@ -209,21 +231,3 @@ class YouTubeAutomation:
         logger.info("Shutting down.")
         self.driver.quit()
 
-    def run(self):
-        """
-        Executes the entire sequence of actions.
-        """
-        logger.info("Starting up...")
-        self.initialize_driver()
-        logger.info("Driver loaded.")
-        time.sleep(1)
-        popup_monitor_thread = threading.Thread(target=self.monitor_popups)
-        popup_monitor_thread.daemon = True
-        logger.info("Starting monitor thread")
-        popup_monitor_thread.start()
-
-
-if __name__ == "__main__":
-    # Create an instance of the automation class and run the script
-    automation = YouTubeAutomation()
-    automation.run()
