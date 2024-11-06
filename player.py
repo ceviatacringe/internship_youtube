@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import win32gui
 import win32con
@@ -34,14 +35,22 @@ class YouTubeAutomation:
         # Install pre-downloaded uBlock Origin extension crx
         try:
             logger.info("Loading Adblock...")
-            crx_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ublock.crx')
+            if getattr(sys, 'frozen', False):
+                # If the script is compiled
+                base_path = os.path.dirname(sys.executable)
+            else:
+                # If running the script in Python
+                base_path = os.path.dirname(os.path.abspath(__file__))
+    
+            crx_path = os.path.join(base_path, 'ublock.crx')
+            logger.info(f"Assumed Ublock crx path: {crx_path}")
+
             self.chrome_options.add_extension(crx_path)
             self.adblock = True
             logger.info("Successfully loaded Adblock.")
-            # Give adblock time to properly load
-            time.sleep(1)
         except Exception as e:
             logger.error(f"Error loading Adblock: {e}")
+            logger.info(f"Switching to non-adblock mode.")
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.chrome_options)
         self.driver.delete_all_cookies() # Clean up old caches from previous runs in case it didn't properly exit
         self.window = gw.getWindowsWithTitle("AlexBrowser")[0]
@@ -69,7 +78,7 @@ class YouTubeAutomation:
                     big_play_button.click()
                     logger.info("Clicked play button.")
             except Exception as e:
-                    logger.info(f"Unable to handle button: {e}") 
+                    logger.info(f"Unable to find button: {e}") 
 
     def reject_cookies(self):
         """

@@ -1,0 +1,103 @@
+2024-11-06 21:58:54,209 | INFO: Starting up...
+2024-11-06 21:58:54,209 | INFO: Loading Adblock...
+2024-11-06 21:58:54,209 | INFO: Successfully loaded Adblock.
+2024-11-06 21:58:54,210 | INFO: ====== WebDriver manager ======
+2024-11-06 21:58:54,878 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 21:58:55,013 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 21:58:55,116 | INFO: Driver [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.93\chromedriver-win32/chromedriver.exe] found in cache
+2024-11-06 21:58:57,267 | INFO: Fully hiding window.
+2024-11-06 21:58:59,576 | INFO: Rejecting cookies.
+2024-11-06 21:59:00,249 | INFO: Clicked the 'Reject all' button (cookies).
+2024-11-06 21:59:00,249 | INFO: Driver loaded.
+2024-11-06 21:59:01,250 | INFO: Starting monitor thread
+2024-11-06 21:59:01,250 | INFO: Started popup monitor.
+2024-11-06 21:59:02,316 | INFO: Opening link: https://www.youtube.com/watch?v=zZZ-FZ03Sxk
+2024-11-06 21:59:02,320 | INFO: Attempting to reveal browser window.
+2024-11-06 21:59:02,320 | INFO: Bringing browser window to foreground.
+2024-11-06 21:59:02,356 | INFO: Maximizing driver window through Selenium.
+2024-11-06 21:59:03,364 | INFO: The element is displayed.
+2024-11-06 21:59:03,364 | INFO: Looking for play button.
+2024-11-06 21:59:03,468 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 21:59:08,620 | INFO: Unable to handle button: Message: 
+
+2024-11-06 22:03:46,396 | INFO: Starting up...
+2024-11-06 22:03:46,396 | INFO: Loading Adblock...
+2024-11-06 22:03:46,396 | ERROR: Error loading Adblock: Path to the extension doesn't exist
+2024-11-06 22:03:46,396 | INFO: Switching to non-adblock mode.
+2024-11-06 22:03:46,396 | INFO: ====== WebDriver manager ======
+2024-11-06 22:03:47,190 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:03:47,324 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:03:47,426 | INFO: Driver [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.93\chromedriver-win32/chromedriver.exe] found in cache
+2024-11-06 22:03:48,674 | INFO: Fully hiding window.
+2024-11-06 22:03:52,968 | INFO: Rejecting cookies.
+2024-11-06 22:03:53,025 | INFO: Clicked the 'Reject all' button (cookies).
+2024-11-06 22:03:53,026 | INFO: Driver loaded.
+2024-11-06 22:03:54,027 | INFO: Starting monitor thread
+2024-11-06 22:03:54,027 | INFO: Started popup monitor.
+2024-11-06 22:03:55,160 | INFO: Opening link: https://www.youtube.com/watch?v=zZZ-FZ03Sxk
+2024-11-06 22:03:55,165 | INFO: Attempting to reveal browser window.
+2024-11-06 22:03:55,165 | INFO: Bringing browser window to foreground.
+2024-11-06 22:03:55,202 | INFO: Maximizing driver window through Selenium.
+2024-11-06 22:03:56,128 | INFO: The element is displayed.
+2024-11-06 22:03:56,128 | INFO: Looking for play button.
+2024-11-06 22:03:56,217 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 22:03:56,732 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 22:04:01,379 | INFO: Clicked 'Skip Ad' button.
+2024-11-06 22:04:01,463 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 22:04:01,463 | INFO: Unable to find button: Message: 
+
+2024-11-06 22:04:34,176 | INFO: Starting up...
+2024-11-06 22:04:34,176 | INFO: Loading Adblock...
+2024-11-06 22:04:34,176 | ERROR: Error loading Adblock: Path to the extension doesn't exist
+2024-11-06 22:04:34,176 | INFO: Switching to non-adblock mode.
+2024-11-06 22:04:34,176 | INFO: ====== WebDriver manager ======
+2024-11-06 22:04:34,878 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:04:34,999 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:04:35,104 | INFO: Driver [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.93\chromedriver-win32/chromedriver.exe] found in cache
+2024-11-06 22:04:36,392 | INFO: Fully hiding window.
+2024-11-06 22:04:39,064 | INFO: Rejecting cookies.
+2024-11-06 22:04:39,231 | INFO: Clicked the 'Reject all' button (cookies).
+2024-11-06 22:04:39,231 | INFO: Driver loaded.
+2024-11-06 22:04:40,232 | INFO: Starting monitor thread
+2024-11-06 22:04:40,232 | INFO: Started popup monitor.
+2024-11-06 22:04:41,271 | INFO: Opening link: https://www.youtube.com/watch?v=zZZ-FZ03Sxk
+2024-11-06 22:04:41,275 | INFO: Attempting to reveal browser window.
+2024-11-06 22:04:41,276 | INFO: Bringing browser window to foreground.
+2024-11-06 22:04:41,309 | INFO: Maximizing driver window through Selenium.
+2024-11-06 22:04:42,542 | INFO: The element is displayed.
+2024-11-06 22:04:42,542 | INFO: Looking for play button.
+2024-11-06 22:04:42,642 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 22:04:42,823 | INFO: Clicked play button.
+2024-11-06 22:04:48,240 | INFO: Clicked 'Skip Ad' button.
+2024-11-06 22:07:35,451 | INFO: Starting up...
+2024-11-06 22:07:35,452 | INFO: Loading Adblock...
+2024-11-06 22:07:35,452 | INFO: Assumed Ublock crx path: D:\Scripts\engineering\ublock.crx
+2024-11-06 22:07:35,452 | INFO: Successfully loaded Adblock.
+2024-11-06 22:07:35,452 | INFO: ====== WebDriver manager ======
+2024-11-06 22:07:36,151 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:07:36,272 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:07:36,375 | INFO: Driver [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.93\chromedriver-win32/chromedriver.exe] found in cache
+2024-11-06 22:07:38,516 | INFO: Fully hiding window.
+2024-11-06 22:08:43,854 | INFO: Starting up...
+2024-11-06 22:08:43,854 | INFO: Loading Adblock...
+2024-11-06 22:08:43,854 | INFO: Assumed Ublock crx path: C:\Users\x\AppData\Local\Temp\_MEI131002\ublock.crx
+2024-11-06 22:08:43,854 | ERROR: Error loading Adblock: Path to the extension doesn't exist
+2024-11-06 22:08:43,854 | INFO: Switching to non-adblock mode.
+2024-11-06 22:08:43,855 | INFO: ====== WebDriver manager ======
+2024-11-06 22:08:44,911 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:08:45,019 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:08:45,122 | INFO: Driver [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.93\chromedriver-win32/chromedriver.exe] found in cache
+2024-11-06 22:08:46,378 | INFO: Fully hiding window.
+2024-11-06 22:08:48,990 | INFO: Rejecting cookies.
+2024-11-06 22:08:49,172 | INFO: Clicked the 'Reject all' button (cookies).
+2024-11-06 22:08:49,172 | INFO: Driver loaded.
+2024-11-06 22:08:50,172 | INFO: Starting monitor thread
+2024-11-06 22:08:50,172 | INFO: Started popup monitor.
+2024-11-06 22:08:51,167 | INFO: Opening link: https://www.youtube.com/watch?v=zZZ-FZ03Sxk
+2024-11-06 22:08:51,170 | INFO: Attempting to reveal browser window.
+2024-11-06 22:08:51,170 | WARNING: Failed to activate window normally: Error code from Windows: 2 - The system cannot find the file specified.
+2024-11-06 22:08:51,171 | ERROR: Error in show_window: (2, 'SetForegroundWindow', 'The system cannot find the file specified.')
+2024-11-06 22:08:52,714 | INFO: The element is displayed.
+2024-11-06 22:08:52,715 | INFO: Looking for play button.
+2024-11-06 22:08:52,923 | INFO: Clicked play button.
+2024-11-06 22:08:52,999 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
