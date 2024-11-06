@@ -221,10 +221,6 @@ class YouTubeAutomation:
         popup_monitor_thread.daemon = True
         logger.info("Starting monitor thread")
         popup_monitor_thread.start()
-        self.start_video('https://www.youtube.com/watch?v=zZZ-FZ03Sxk')
-
-        time.sleep(500) # remove this later 
-        self.clean_up()
 
 
 if __name__ == "__main__":

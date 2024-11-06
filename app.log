@@ -101,3 +101,53 @@
 2024-11-06 22:08:52,715 | INFO: Looking for play button.
 2024-11-06 22:08:52,923 | INFO: Clicked play button.
 2024-11-06 22:08:52,999 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 22:17:59,314 | INFO: Starting up...
+2024-11-06 22:17:59,314 | INFO: Loading Adblock...
+2024-11-06 22:17:59,314 | INFO: Assumed Ublock crx path: D:\Scripts\engineering\ublock.crx
+2024-11-06 22:17:59,314 | INFO: Successfully loaded Adblock.
+2024-11-06 22:17:59,314 | INFO: ====== WebDriver manager ======
+2024-11-06 22:18:00,112 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:18:00,223 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:18:00,339 | INFO: Driver [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.116\chromedriver-win32/chromedriver.exe] found in cache
+2024-11-06 22:18:02,797 | INFO: Fully hiding window.
+2024-11-06 22:18:05,688 | INFO: Rejecting cookies.
+2024-11-06 22:18:05,792 | INFO: Clicked the 'Reject all' button (cookies).
+2024-11-06 22:18:05,792 | INFO: Driver loaded.
+2024-11-06 22:18:06,794 | INFO: Starting monitor thread
+2024-11-06 22:18:06,794 | INFO: Started popup monitor.
+2024-11-06 22:18:07,843 | INFO: Opening link: https://www.youtube.com/watch?v=zZZ-FZ03Sxk
+2024-11-06 22:18:07,847 | INFO: Attempting to reveal browser window.
+2024-11-06 22:18:07,848 | INFO: Bringing browser window to foreground.
+2024-11-06 22:18:07,899 | INFO: Maximizing driver window through Selenium.
+2024-11-06 22:18:08,744 | INFO: The element is displayed.
+2024-11-06 22:18:08,745 | INFO: Looking for play button.
+2024-11-06 22:18:08,883 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 22:18:09,441 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 22:18:09,951 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 22:18:14,128 | INFO: Unable to find button: Message: 
+
+2024-11-06 22:28:04,589 | INFO: Starting up...
+2024-11-06 22:28:04,589 | INFO: Loading Adblock...
+2024-11-06 22:28:04,589 | INFO: Assumed Ublock crx path: D:\Scripts\engineering\ublock.crx
+2024-11-06 22:28:04,590 | INFO: Successfully loaded Adblock.
+2024-11-06 22:28:04,590 | INFO: ====== WebDriver manager ======
+2024-11-06 22:28:05,308 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:28:05,488 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-06 22:28:05,587 | INFO: Driver [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.116\chromedriver-win32/chromedriver.exe] found in cache
+2024-11-06 22:28:07,943 | INFO: Fully hiding window.
+2024-11-06 22:28:10,741 | INFO: Rejecting cookies.
+2024-11-06 22:28:10,910 | INFO: Clicked the 'Reject all' button (cookies).
+2024-11-06 22:28:10,910 | INFO: Driver loaded.
+2024-11-06 22:28:11,911 | INFO: Starting monitor thread
+2024-11-06 22:28:11,911 | INFO: Started popup monitor.
+2024-11-06 22:28:12,893 | INFO: Opening link: https://www.youtube.com/watch?v=zZZ-FZ03Sxk
+2024-11-06 22:28:12,896 | INFO: Attempting to reveal browser window.
+2024-11-06 22:28:12,897 | INFO: Bringing browser window to foreground.
+2024-11-06 22:28:13,029 | INFO: Maximizing driver window through Selenium.
+2024-11-06 22:28:14,005 | INFO: The element is displayed.
+2024-11-06 22:28:14,005 | INFO: Looking for play button.
+2024-11-06 22:28:14,090 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 22:28:14,614 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 22:28:15,136 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
+2024-11-06 22:28:19,236 | INFO: Unable to find button: Message: 
+
