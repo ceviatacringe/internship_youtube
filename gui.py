@@ -71,8 +71,18 @@ class YouTubeApp(ctk.CTk):
         self.url_entry = ctk.CTkEntry(self.link_input_frame, width=250, font=("Segoe UI", 14), placeholder_text="Paste YouTube URL here", border_width=2, fg_color="#2c2f37", text_color="white")
         self.url_entry.pack(pady=10)
 
-        self.open_button = ctk.CTkButton(self.link_input_frame, text="Open", command=self.open_video, font=("Segoe UI", 16), fg_color="#d063a7", hover_color="#e070b1", width=200)
-        self.open_button.pack(pady=20)
+        # Add both "Open" and "Download" buttons in a frame for layout
+        self.button_frame = ctk.CTkFrame(self.link_input_frame, fg_color="#1e2227")
+        self.button_frame.pack(pady=20)
+
+        # "Open" button
+        self.open_button = ctk.CTkButton(self.button_frame, text="Open", command=self.open_video, font=("Segoe UI", 16), fg_color="#d063a7", hover_color="#e070b1", width=100)
+        self.open_button.grid(row=0, column=0, padx=5)
+
+        # "Download" button only appears if Adblock is enabled
+        if self.adblock_var.get():  # Check if Adblock is enabled
+            self.download_button = ctk.CTkButton(self.button_frame, text="Download", command=self.download_video, font=("Segoe UI", 16), fg_color="#d063a7", hover_color="#e070b1", width=100)
+            self.download_button.grid(row=0, column=1, padx=5)
 
     def open_video(self):
         link = self.url_entry.get()
@@ -88,6 +98,20 @@ class YouTubeApp(ctk.CTk):
         self.youtube_automation_thread = threading.Thread(target=self.youtube_automation.start_video, args=(link,))
         self.youtube_automation_thread.start()
 
+    def download_video(self):
+        link = self.url_entry.get()
+        # Validate the link (only YouTube URLs)
+        if not self.is_valid_youtube_url(link):
+            self.show_invalid_url_message()
+            return
+
+        # Hide invalid URL message if URL is valid
+        self.invalid_url_label.pack_forget()
+
+        # Call the download method with the valid link in a separate thread
+        self.youtube_automation_thread = threading.Thread(target=self.youtube_automation.download, args=(link,))
+        self.youtube_automation_thread.start()
+
     def show_invalid_url_message(self):
         # Show the "Invalid URL" message on the GUI
         self.invalid_url_label.pack(pady=10)
@@ -95,7 +119,6 @@ class YouTubeApp(ctk.CTk):
     def is_valid_youtube_url(self, url):
         youtube_pattern = r"^(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/.*$"
         return re.match(youtube_pattern, url) is not None
-
 
 if __name__ == "__main__":
     app = YouTubeApp()
