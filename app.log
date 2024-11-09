@@ -151,3 +151,71 @@
 2024-11-06 22:28:15,136 | WARNING: Connection pool is full, discarding connection: localhost. Connection pool size: 1
 2024-11-06 22:28:19,236 | INFO: Unable to find button: Message: 
 
+2024-11-07 18:08:52,587 | INFO: Running Adblock: True, Fullscreen: False
+2024-11-07 18:08:52,665 | INFO: Download folder: D:\Scripts\engineering\Downloads
+2024-11-07 18:08:52,665 | INFO: Loading Adblock...
+2024-11-07 18:08:52,665 | INFO: Assumed Ublock crx path: D:\Scripts\engineering\ublock.crx
+2024-11-07 18:08:52,677 | INFO: Successfully loaded Adblock.
+2024-11-07 18:08:52,678 | INFO: ====== WebDriver manager ======
+2024-11-07 18:08:54,527 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-07 18:08:54,750 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-07 18:08:54,872 | INFO: Driver [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.116\chromedriver.exe] found in cache
+2024-11-07 18:08:58,310 | INFO: Cleaned up cache.
+2024-11-07 18:08:58,321 | INFO: Fully hiding window.
+2024-11-07 18:09:57,993 | INFO: Running Adblock: True, Fullscreen: False
+2024-11-07 18:09:57,993 | INFO: Download folder: D:\Scripts\engineering\Downloads
+2024-11-07 18:09:57,993 | INFO: Loading Adblock...
+2024-11-07 18:09:57,993 | INFO: Assumed Ublock crx path: D:\Scripts\engineering\ublock.crx
+2024-11-07 18:09:58,011 | INFO: Successfully loaded Adblock.
+2024-11-07 18:09:58,011 | INFO: ====== WebDriver manager ======
+2024-11-07 18:09:58,771 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-07 18:09:58,880 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-07 18:09:58,983 | INFO: Driver [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.116\chromedriver.exe] found in cache
+2024-11-07 18:10:01,521 | INFO: Cleaned up cache.
+2024-11-07 18:10:01,523 | INFO: Fully hiding window.
+2024-11-07 18:10:04,297 | INFO: Rejecting cookies.
+2024-11-07 18:10:04,515 | INFO: Clicked the 'Reject all' button (cookies).
+2024-11-07 18:10:09,638 | INFO: Opening link: https://www.youtube.com/watch?v=be1waE9myCU&list=PLbAFXJC0J5Gb9hzEYU5buZd4udIuIUheP&index=4
+2024-11-07 18:10:09,638 | INFO: Starting monitor thread
+2024-11-07 18:10:09,638 | INFO: Started popup monitor.
+2024-11-07 18:10:09,642 | INFO: Attempting to reveal browser window.
+2024-11-07 18:10:09,649 | INFO: Bringing browser window to foreground.
+2024-11-07 18:10:09,849 | INFO: Maximizing driver window through Selenium.
+2024-11-07 18:10:11,226 | INFO: The element is displayed.
+2024-11-07 18:10:16,368 | INFO: Looking for convert button.
+2024-11-07 18:10:16,368 | INFO: Clicking convert.
+2024-11-07 18:10:16,398 | INFO: Waiting for download button.
+2024-11-07 18:10:18,975 | INFO: Looking for last download button.
+2024-11-07 18:10:37,262 | INFO: Looking for convert button.
+2024-11-07 18:10:37,262 | INFO: Clicking convert.
+2024-11-07 18:10:37,284 | INFO: Waiting for download button.
+2024-11-07 18:10:37,827 | INFO: Looking for last download button.
+2024-11-07 18:10:38,353 | INFO: Clicking final button.
+2024-11-07 18:10:38,555 | INFO: Download started.
+2024-11-07 18:17:10,060 | INFO: Running Adblock: True, Fullscreen: False
+2024-11-07 18:17:10,061 | INFO: Download folder: D:\Scripts\engineering\Downloads
+2024-11-07 18:17:10,061 | INFO: Loading Adblock...
+2024-11-07 18:17:10,061 | INFO: Assumed Ublock crx path: D:\Scripts\engineering\ublock.crx
+2024-11-07 18:17:10,061 | INFO: Successfully loaded Adblock.
+2024-11-07 18:17:10,061 | INFO: ====== WebDriver manager ======
+2024-11-07 18:17:10,971 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-07 18:17:11,068 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-07 18:17:11,174 | INFO: Driver [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.116\chromedriver.exe] found in cache
+2024-11-07 18:17:14,084 | INFO: Cleaned up cache.
+2024-11-07 18:17:14,088 | INFO: Fully hiding window.
+2024-11-07 18:17:17,705 | INFO: Rejecting cookies.
+2024-11-07 18:17:17,917 | INFO: Clicked the 'Reject all' button (cookies).
+2024-11-07 18:17:21,409 | INFO: Opening link: https://www.youtube.com/watch?v=be1waE9myCU&list=PLbAFXJC0J5Gb9hzEYU5buZd4udIuIUheP&index=4
+2024-11-07 18:17:21,410 | INFO: Starting monitor thread
+2024-11-07 18:17:21,411 | INFO: Started popup monitor.
+2024-11-07 18:17:21,417 | INFO: Attempting to reveal browser window.
+2024-11-07 18:17:21,419 | INFO: Bringing browser window to foreground.
+2024-11-07 18:17:21,652 | INFO: Maximizing driver window through Selenium.
+2024-11-07 18:17:23,130 | INFO: The element is displayed.
+2024-11-07 18:17:25,592 | INFO: Fully hiding window.
+2024-11-07 18:17:26,712 | INFO: Looking for convert button.
+2024-11-07 18:17:26,712 | INFO: Clicking convert.
+2024-11-07 18:17:26,765 | INFO: Waiting for download button.
+2024-11-07 18:17:27,353 | INFO: Looking for last download button.
+2024-11-07 18:17:27,893 | INFO: Clicking final button.
+2024-11-07 18:17:28,182 | INFO: Download started.
