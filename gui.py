@@ -120,7 +120,7 @@ class YouTubeApp(ctk.CTk):
         # Hide invalid URL message if URL is valid
         self.invalid_url_label.pack_forget()
 
-        # Call the download method with the valid link in a separate thread
+        # Call the download method with the valid link in a separate thread 
         self.youtube_automation_thread = threading.Thread(target=self.youtube_automation.download, args=(link,))
         self.youtube_automation_thread.start()
 

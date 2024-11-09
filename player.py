@@ -30,6 +30,7 @@ class YouTubeAutomation:
         self.adblock = adblock
         self.download_file_name = None
         self.fullscreen = fullscreen
+        self.path = None
         self.firstlink = True # Keep browser hidden till first link is requested
         logger.info(f"Running Adblock: {self.adblock}, Fullscreen: {self.fullscreen}, Show everything: {self.showall}")
 
@@ -40,18 +41,18 @@ class YouTubeAutomation:
             # Determine current path
         if getattr(sys, 'frozen', False):
             # If the script is compiled
-            base_path = os.path.dirname(sys.executable)
+            self.path = os.path.dirname(sys.executable)
         else:
             # If running the script in Python
-            base_path = os.path.dirname(os.path.abspath(__file__))
-        self.download_folder = os.path.join(base_path, 'Downloads')
+            self.path = os.path.dirname(os.path.abspath(__file__))
+        self.download_folder = os.path.join(self.path, 'Downloads')
             # Make sure folder exists
         if not os.path.exists(self.download_folder):
             os.makedirs(self.download_folder)
             # Configure settings
         logger.info(f"Download folder: {self.download_folder}")
         self.chrome_options.add_argument("--start-minimized")
-        self.chrome_options.add_argument("--disable-gpu")
+        #self.chrome_options.add_argument("--disable-gpu")
         self.chrome_options.add_argument("--disable-infobars")
         self.chrome_options.add_argument("--enable-automation")
         #If you want to change the name, also changed the getWindowsWithTitle below
@@ -66,7 +67,7 @@ class YouTubeAutomation:
         if self.adblock:
             try:
                 logger.info("Loading Adblock...")
-                crx_path = os.path.join(base_path, 'ublock.crx')
+                crx_path = os.path.join(self.path, 'ublock.crx')
                 logger.info(f"Assumed Ublock crx path: {crx_path}")
                 self.chrome_options.add_extension(crx_path)
                 self.adblock = True
@@ -359,9 +360,10 @@ class YouTubeAutomation:
             )
             convert_button.click()
             logger.info("Clicked convert")
-            time.sleep(1)
         except Exception as e:
             logger.error(f"Failed: {e}")
+        time.sleep(2)
+        self.driver.get("file:///" + str(os.path.join(self.path,"spinner.gif")))
         self.get_latest_download(0.2)
         logger.info("Opening editor.")
         with self.lock:
@@ -370,6 +372,7 @@ class YouTubeAutomation:
         wait = WebDriverWait(self.driver, 10)
         upload_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input.picker-dropdown__input[type="file"]')))
         # Send the video path to the input field
+        time.sleep(2)
         video_path = os.path.join(self.download_folder,self.download_file_name)
         logger.info(f"Attempting to send {video_path} to the editor.")
         upload_input.send_keys(video_path)
