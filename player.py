@@ -23,7 +23,7 @@ class YouTubeAutomation:
         self.unavailable = True # If the video is private/invalid url/deleted
         self.driver = None
         self.window = None
-        self.showall = False
+        self.showall = showall
         self.chrome_options = Options()
         self.adblock = adblock
         self.fullscreen = fullscreen
@@ -279,6 +279,14 @@ class YouTubeAutomation:
         logger.info("Shutting down.")
         self.driver.quit()
 
+    def get_latest_download(self) -> str:
+        """
+        Get the last downloaded file name (from the script's download folder).
+        """
+        files = [os.path.join(self.download_folder, f) for f in os.listdir(self.download_folder)]
+        latest_file = max(files, key=os.path.getctime)
+        return latest_file
+
     def download(self, link):
         """
         Download video to this script/exe's folder using a site convertor.
@@ -316,6 +324,9 @@ class YouTubeAutomation:
         except TimeoutException:
             logger.error("Downloading site error, couldn't find last button. Retrying...")
             self.download()
+        # Reset window hider in case the user starts opening links again.
         self.firstlink == True
+        print(self.get_latest_download())
+        # Remove this when done with func
         time.sleep(500)
         
