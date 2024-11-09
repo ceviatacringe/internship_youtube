@@ -150,7 +150,8 @@ class YouTubeAutomation:
                 EC.presence_of_element_located((By.ID, "video-title"))
             )
             logger.info("Video results are loaded.")
-
+            time.sleep(0.5)
+            
             # Find the first non-ad video
             videos = self.driver.find_elements(By.XPATH, "//a[@id='video-title']")
             for video in videos:
@@ -362,20 +363,29 @@ class YouTubeAutomation:
             logger.info("Clicked convert")
         except Exception as e:
             logger.error(f"Failed: {e}")
-        time.sleep(2)
-        self.driver.get("file:///" + str(os.path.join(self.path,"spinner.gif")))
+        logger.info("Loading gif.")
+        # Make and switch to new tab
+        self.driver.switch_to.new_window('tab')
+        self.driver.get("file://" + os.path.abspath("spinner.gif"))
+        # Press escape so the url bar doesn't look selected
+        self.driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.ESCAPE)
+        time.sleep(3)
+        # Scan for download finish
         self.get_latest_download(0.2)
+        self.driver.close() # Close gif tab and return
+        self.driver.switch_to.window(self.driver.window_handles[0])
         logger.info("Opening editor.")
+        self.show_window() 
         with self.lock:
             self.driver.get("https://online-video-cutter.com/")
         # Wait till ovc loads
         wait = WebDriverWait(self.driver, 10)
         upload_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input.picker-dropdown__input[type="file"]')))
         # Send the video path to the input field
-        time.sleep(2)
         video_path = os.path.join(self.download_folder,self.download_file_name)
         logger.info(f"Attempting to send {video_path} to the editor.")
-        upload_input.send_keys(video_path)
+        with self.lock:
+            upload_input.send_keys(video_path)
         logger.info("Editor ready.")
         logger.info("Maximizing window.")
         self.driver.maximize_window()
