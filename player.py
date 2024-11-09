@@ -24,8 +24,11 @@ class YouTubeAutomation:
         self.driver = None
         self.window = None
         self.showall = showall
+        self.lastdownload = time.time()
         self.chrome_options = Options()
+        self.lock = threading.Lock()
         self.adblock = adblock
+        self.download_file_name = None
         self.fullscreen = fullscreen
         self.firstlink = True # Keep browser hidden till first link is requested
         logger.info(f"Running Adblock: {self.adblock}, Fullscreen: {self.fullscreen}, Show everything: {self.showall}")
@@ -189,18 +192,19 @@ class YouTubeAutomation:
         logger.info("Started popup monitor.")
         while True:
             time.sleep(0.3)
-            if not self.adblock:
-                try:
-                    # Check for "Skip" button for ads
-                    skip_ad_button = WebDriverWait(self.driver, 0.5).until(
-                        EC.element_to_be_clickable((By.CLASS_NAME, "ytp-skip-ad-button"))
-                    )
-                    skip_ad_button.click()
-                    logger.info("Clicked 'Skip Ad' button.")
+            with self.lock:
+                if not self.adblock:
+                    try:
+                        # Check for "Skip" button for ads
+                        skip_ad_button = WebDriverWait(self.driver, 0.5).until(
+                            EC.element_to_be_clickable((By.CLASS_NAME, "ytp-skip-ad-button"))
+                        )
+                        skip_ad_button.click()
+                        logger.info("Clicked 'Skip Ad' button.")
 
-                except Exception:
-                    # No ad skip button found
-                    pass
+                    except TimeoutException:
+                        # No ad skip button found
+                        pass
 
 
     def check_available(self):
@@ -239,6 +243,7 @@ class YouTubeAutomation:
             logger.info("Fully hiding window.")
 
     def show_window(self):
+        self.window.activate()
         """
         Restores and maximizes the Chrome window, and brings it to the foreground.
         """
@@ -279,54 +284,97 @@ class YouTubeAutomation:
         logger.info("Shutting down.")
         self.driver.quit()
 
-    def get_latest_download(self) -> str:
+
+    def get_latest_download(self, checktime) -> str:
         """
-        Get the last downloaded file name (from the script's download folder).
+        Get the last downloaded file name (from the script's download folder),
+        Loop check it until the download is complete, then return.
         """
-        files = [os.path.join(self.download_folder, f) for f in os.listdir(self.download_folder)]
-        latest_file = max(files, key=os.path.getctime)
-        return latest_file
+        with self.lock:
+            logger.info(f"Looking for latest file in: {self.download_folder}")
+            print("This might take a while until the download is finished.")
+            while True:
+                # Get the list of files in the download folder
+                # Exclude .crdownload (still downloading) and temp files
+                files = [
+                    os.path.join(self.download_folder, f)
+                    for f in os.listdir(self.download_folder)
+                    if os.path.isfile(os.path.join(self.download_folder, f)) and f.endswith('.mp4')
+                ]
+
+                if not files:  # If the list is empty, skip to the next iteration
+                    logger.debug("No files found in Downloads folder.")
+                    time.sleep(checktime) # Wait before checking again
+                    continue
+
+                # Find the latest file based on creation time
+                latest_file = max(files, key=os.path.getctime)
+
+                file_creation_time = os.path.getctime(latest_file)
+                # Check if the file was downloaded this download function run
+                if self.lastdownload - file_creation_time <= 0:
+                    self.download_file_name = os.path.basename(latest_file)
+                    return
+                else:
+                    time.sleep(checktime)  # Wait before checking again
+
 
     def download(self, link):
         """
-        Download video to this script/exe's folder using a site convertor.
+        Download video to this script/exe's folder using a site convertor,
+        Then put it up in online-video-cutter for editing.
         """
+        self.lastdownload = time.time()
         self.hide_window()
-        self.driver.get('https://tubemp4.is/')
-        input_field = self.driver.find_element(By.ID, "u")
-        input_field.send_keys(link)
-        convert_button = self.driver.find_elements(By.ID, "convert")
-        logger.info("Looking for convert button.")
-        if convert_button:
-            logger.info("Clicking convert.")
-            convert_button[0].click()
-        # Wait for the download button to appear
-        logger.info("Waiting for download button.")
-        WebDriverWait(self.driver, 20).until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, "button.btn.btn-sm.process-button.btn-primary.btn-stream"))
-        )
-        # and click the closest one to the top (highest resolution)
-        download_buttons = self.driver.find_elements(By.CSS_SELECTOR, "button.btn.btn-sm.process-button.btn-primary.btn-stream")
-        if download_buttons:
-            download_buttons[0].click()
-        
+        with self.lock:
+            self.driver.get("https://cnvmp3.com/")
+        # Find and click input bar
         try:
-            logger.info("Looking for last download button.")
-            WebDriverWait(self.driver, 5).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn.btn-sm.btn-primary.btn-dl.download-button.btn-stream.w-50"))
+            search_bar = WebDriverWait(self.driver, 4).until(
+                EC.element_to_be_clickable((By.ID, "video-url"))
             )
-            logger.info("Clicking final button.")
-            # Find the button and click it
-            download_button = self.driver.find_element(By.CSS_SELECTOR, "button.btn.btn-sm.btn-primary.btn-dl.download-button.btn-stream.w-50")
-            download_button.click()
-            logger.info("Download started.")
-            os.startfile(self.download_folder)
+            search_bar.click()
+            logger.info("Clicked input bar")
+            logger.info("Typing URL.")
+            search_bar.send_keys(link + Keys.RETURN)
         except TimeoutException:
-            logger.error("Downloading site error, couldn't find last button. Retrying...")
-            self.download()
+            logger.error(f"Couldn't find search bar.")
+            self.firstlink == True
+            return
+        # Wait for the download button to appear
+        try:
+            # Wait for the dropdown button to be clickable and click it
+            quality_display = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "quality-select-display"))
+            )
+            quality_display.click()  # Open the dropdown
+            logger.info("Clicked on dropdown")
+            mp4_option = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//div[@class='quality-select-options' and text()='MP4']"))
+            )
+            mp4_option.click()  # Select the MP4 option
+            logger.info("Selected MP4")
+            convert_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.CLASS_NAME, "converter-button-container"))
+            )
+            convert_button.click()
+            logger.info("Clicked convert")
+            time.sleep(1)
+        except Exception as e:
+            logger.error(f"Failed: {e}")
+        self.get_latest_download(0.2)
+        logger.info("Opening editor.")
+        with self.lock:
+            self.driver.get("https://online-video-cutter.com/")
+        # Wait till ovc loads
+        wait = WebDriverWait(self.driver, 10)
+        upload_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input.picker-dropdown__input[type="file"]')))
+        # Send the video path to the input field
+        video_path = os.path.join(self.download_folder,self.download_file_name)
+        logger.info(f"Attempting to send {video_path} to the editor.")
+        upload_input.send_keys(video_path)
+        logger.info("Editor ready.")
+        logger.info("Maximizing window.")
+        self.driver.maximize_window()
         # Reset window hider in case the user starts opening links again.
         self.firstlink == True
-        print(self.get_latest_download())
-        # Remove this when done with func
-        time.sleep(500)
-        

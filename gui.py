@@ -89,7 +89,7 @@ class YouTubeApp(ctk.CTk):
         # "Download" button only appears if Adblock is enabled
         # This is because not having Adblock makes the download site almost unusable.
         if self.adblock_var.get():
-            self.download_button = ctk.CTkButton(self.button_frame, text="Download & cut", command=self.download_video, font=("Segoe UI", 16), fg_color="#d063a7", hover_color="#e070b1", width=100)
+            self.download_button = ctk.CTkButton(self.button_frame, text="Download & Edit", command=self.download_video, font=("Segoe UI", 16), fg_color="#d063a7", hover_color="#e070b1", width=100)
             self.download_button.grid(row=0, column=1, padx=5)
 
         # "Youtube search" button
