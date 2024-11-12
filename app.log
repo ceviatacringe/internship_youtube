@@ -219,3 +219,27 @@
 2024-11-07 18:17:27,353 | INFO: Looking for last download button.
 2024-11-07 18:17:27,893 | INFO: Clicking final button.
 2024-11-07 18:17:28,182 | INFO: Download started.
+2024-11-12 01:49:05,886 | INFO: Running Adblock: True, Fullscreen: False, Show everything: False
+2024-11-12 01:49:05,887 | INFO: Download folder: D:\Scripts\engineering\Downloads
+2024-11-12 01:49:05,887 | INFO: Loading Adblock...
+2024-11-12 01:49:05,887 | INFO: Assumed Ublock crx path: D:\Scripts\engineering\ublock.crx
+2024-11-12 01:49:05,888 | INFO: Successfully loaded Adblock.
+2024-11-12 01:49:05,888 | INFO: ====== WebDriver manager ======
+2024-11-12 01:49:06,956 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-12 01:49:07,087 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-12 01:49:07,204 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-12 01:49:07,500 | INFO: WebDriver version 130.0.6723.116 selected
+2024-11-12 01:49:07,504 | INFO: Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.116/win32/chromedriver-win32.zip
+2024-11-12 01:49:07,504 | INFO: About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.116/win32/chromedriver-win32.zip
+2024-11-12 01:49:07,595 | INFO: Driver downloading response is 200
+2024-11-12 01:49:07,811 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-12 01:49:08,051 | INFO: Driver has been saved in cache [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.116]
+2024-11-12 01:49:11,658 | INFO: Cleaned up cache.
+2024-11-12 01:49:11,664 | INFO: Fully hiding window.
+2024-11-12 01:49:11,832 | INFO: Rejecting cookies.
+2024-11-12 07:23:49,473 | INFO: Recording for 20 seconds...
+2024-11-12 07:24:09,691 | INFO: Actual FPS during recording: 45.85
+2024-11-12 07:24:09,691 | INFO: Time since recording started: 20.217524528503418
+2024-11-12 07:24:39,442 | INFO: Assembling video with ffmpeg...
+2024-11-12 07:24:51,510 | INFO: Recording saved as recordings\Recording_2024-11-12_07-23-49.mp4
+2024-11-12 07:24:51,510 | INFO: Total process time: 62.03601789474487

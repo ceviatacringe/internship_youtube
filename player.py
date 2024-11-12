@@ -20,7 +20,7 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 class YouTubeAutomation:
     def __init__(self, adblock=True, fullscreen=False, showall=False):
-        self.unavailable = True # If the video is private/invalid url/deleted
+        self.unavailable = True # If the vide o is private/invalid url/deleted
         self.driver = None
         self.window = None
         self.showall = showall
@@ -125,11 +125,13 @@ class YouTubeAutomation:
 
     def youtube_search(self, keyword):
         # Start the popup monitor thread
-        if not hasattr(self, "popup_monitor_thread"):
+        if not hasattr(self, "popup_monitor_thread") and not self.adblock:
             self.popup_monitor_thread = threading.Thread(target=self.monitor_ads)
             self.popup_monitor_thread.daemon = True  # Ensures it doesn't block the program
             logger.info("Starting monitor thread")
             self.popup_monitor_thread.start()
+        if not self.driver.current_url.startswith("https://www.youtube"):
+            self.driver.get("https://www.youtube.com/")
         try:
             # Find and click search bar
             search_bar = WebDriverWait(self.driver, 10).until(
@@ -150,8 +152,8 @@ class YouTubeAutomation:
                 EC.presence_of_element_located((By.ID, "video-title"))
             )
             logger.info("Video results are loaded.")
-            time.sleep(0.5)
-            
+            #time.sleep(0.5)
+            #fixme change to driver wait delay
             # Find the first non-ad video
             videos = self.driver.find_elements(By.XPATH, "//a[@id='video-title']")
             for video in videos:
@@ -285,6 +287,7 @@ class YouTubeAutomation:
         self.driver.delete_all_cookies()
         logger.info("Shutting down.")
         self.driver.quit()
+        self.driver = None
 
 
     def get_latest_download(self, checktime) -> str:
@@ -341,7 +344,7 @@ class YouTubeAutomation:
             search_bar.send_keys(link + Keys.RETURN)
         except TimeoutException:
             logger.error(f"Couldn't find search bar.")
-            self.firstlink == True
+            self.firstlink = True
             return
         # Wait for the download button to appear
         try:
@@ -367,8 +370,8 @@ class YouTubeAutomation:
         # Make and switch to new tab
         self.driver.switch_to.new_window('tab')
         self.driver.get("file://" + os.path.abspath("spinner.gif"))
-        # Press escape so the url bar doesn't look selected
-        self.driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.ESCAPE)
+        # Defocus URL so it doesn't look hovered 
+        self.driver.find_element(By.TAG_NAME, 'body').click() # fixme this doesn't work find another solution later
         time.sleep(3)
         # Scan for download finish
         self.get_latest_download(0.2)
