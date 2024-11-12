@@ -3,6 +3,7 @@ import threading
 import re
 from player import YouTubeAutomation
 
+
 class YouTubeApp(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -35,6 +36,10 @@ class YouTubeApp(ctk.CTk):
         # Label for invalid URL message (hidden by default).
         self.invalid_url_label = ctk.CTkLabel(self, text="Invalid URL", font=("Segoe UI", 16), text_color="red", bg_color="#1e2227")
         self.invalid_url_label.pack_forget()
+
+        # Label for recording message (hidden by default).
+        self.recording_label = ctk.CTkLabel(self, text="Recording started, press q to end early", font=("Segoe UI", 16), text_color="lime", bg_color="#1e2227")
+        self.recording_label.pack_forget()
 
     def load(self):
         # Prepare for initialization.
@@ -87,7 +92,6 @@ class YouTubeApp(ctk.CTk):
         self.open_button.grid(row=0, column=0, padx=5)
 
         # "Download" button only appears if Adblock is enabled
-        # This is because not having Adblock makes the download site almost unusable.
         if self.adblock_var.get():
             self.download_button = ctk.CTkButton(self.button_frame, text="Download & Edit", command=self.download_video, font=("Segoe UI", 16), fg_color="#d063a7", hover_color="#e070b1", width=100)
             self.download_button.grid(row=0, column=1, padx=5)
@@ -96,59 +100,75 @@ class YouTubeApp(ctk.CTk):
         self.search_button = ctk.CTkButton(self.button_frame, text="Youtube search", command=self.non_direct_search, font=("Segoe UI", 16), fg_color="#d063a7", hover_color="#e070b1", width=150)
         self.search_button.grid(row=0, column=2, padx=5)
 
+        # New row for the Record button and input field
+        self.record_frame = ctk.CTkFrame(self.link_input_frame, fg_color="#1e2227")
+        self.record_frame.pack(pady=20, fill="both", expand=True)
+
+        # Label for duration input
+        self.duration_label = ctk.CTkLabel(self.record_frame, text="Recording Duration (s):", font=("Segoe UI", 16), text_color="white")
+        self.duration_label.grid(row=0, column=0, padx=5)
+
+        # Entry for integer input (duration)
+        self.duration_entry = ctk.CTkEntry(self.record_frame, width=100, font=("Segoe UI", 14), border_width=2, fg_color="#2c2f37", text_color="white")
+        self.duration_entry.grid(row=0, column=1, padx=5)
+
+        # "Record" button
+        self.record_button = ctk.CTkButton(self.record_frame, text="Record", command=self.record_video, font=("Segoe UI", 16), fg_color="#d063a7", hover_color="#e070b1", width=100)
+        self.record_button.grid(row=0, column=2, padx=5)
+
     def open_video(self):
         link = self.url_entry.get()
-        # Validate the link (only YouTube URLs)
         if not self.is_valid_youtube_url(link):
             self.show_invalid_url_message()
             return
-
-        # Hide invalid URL message if URL is valid
         self.invalid_url_label.pack_forget()
-
-        # Call the start_video method with the valid link in a separate thread
         self.youtube_automation_thread = threading.Thread(target=self.youtube_automation.start_video, args=(link,))
         self.youtube_automation_thread.start()
 
     def download_video(self):
         link = self.url_entry.get()
-        # Validate the link (only YouTube URLs)
         if not self.is_valid_youtube_url(link):
             self.show_invalid_url_message()
             return
-
-        # Hide invalid URL message if URL is valid
         self.invalid_url_label.pack_forget()
-
-        # Call the download method with the valid link in a separate thread 
         self.youtube_automation_thread = threading.Thread(target=self.youtube_automation.download, args=(link,))
         self.youtube_automation_thread.start()
 
     def non_direct_search(self):
         keyword = self.url_entry.get()
-        
-        # Check if the input is a link; if so, show "Use keywords, not links." message
         if self.is_valid_youtube_url(keyword):
             self.invalid_url_label.configure(text="Use keywords, not links.")
             self.invalid_url_label.pack(pady=10)
             return
         else:
-            self.invalid_url_label.pack_forget()  # Hide the message if it's a valid keyword
-
-        # Start the YouTube search in a separate thread
+            self.invalid_url_label.pack_forget()
         self.youtube_automation_thread = threading.Thread(
             target=self.youtube_automation.youtube_search, args=(keyword,)
         )
         self.youtube_automation_thread.start()
 
+    def record_video(self):
+        try:
+            duration = int(self.duration_entry.get())
+            if duration <= 0:
+                raise ValueError("Duration must be a positive integer.")
+        except ValueError as e:
+            self.invalid_url_label.configure(text=f"Invalid duration: {e}")
+            self.invalid_url_label.pack(pady=10)
+            return
+
+        self.invalid_url_label.pack_forget()
+        self.recording_label.pack(pady=10)  # Show the recording label
+        self.youtube_automation_thread = threading.Thread(target=self.youtube_automation.record, args=(duration,))
+        self.youtube_automation_thread.start()
+
     def show_invalid_url_message(self):
-        # Show the "Invalid URL" message on the GUI
         self.invalid_url_label.pack(pady=10)
 
     def is_valid_youtube_url(self, url):
-        # Validate youtube link
-        youtube_pattern = r"^(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/.*$"
-        return re.match(youtube_pattern, url) is not None
+        pattern = r"(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})"
+        return re.match(pattern, url)
+
 
 if __name__ == "__main__":
     # Might move to main later

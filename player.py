@@ -16,6 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from record_screen import record_screen
 
 
 class YouTubeAutomation:
@@ -152,8 +153,8 @@ class YouTubeAutomation:
                 EC.presence_of_element_located((By.ID, "video-title"))
             )
             logger.info("Video results are loaded.")
-            #time.sleep(0.5)
-            #fixme change to driver wait delay
+            # Explicit delay for slower machines (it bugs on bad hardware)
+            time.sleep(0.8)
             # Find the first non-ad video
             videos = self.driver.find_elements(By.XPATH, "//a[@id='video-title']")
             for video in videos:
@@ -370,8 +371,7 @@ class YouTubeAutomation:
         # Make and switch to new tab
         self.driver.switch_to.new_window('tab')
         self.driver.get("file://" + os.path.abspath("spinner.gif"))
-        # Defocus URL so it doesn't look hovered 
-        self.driver.find_element(By.TAG_NAME, 'body').click() # fixme this doesn't work find another solution later
+        # fixme: find a way to defocus URL so it doesn't look hovered
         time.sleep(3)
         # Scan for download finish
         self.get_latest_download(0.2)
@@ -394,3 +394,6 @@ class YouTubeAutomation:
         self.driver.maximize_window()
         # Reset window hider in case the user starts opening links again.
         self.firstlink == True
+
+    def record(self, recordtime):
+        record_screen(recordtime)
