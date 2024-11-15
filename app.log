@@ -243,3 +243,52 @@
 2024-11-12 07:24:39,442 | INFO: Assembling video with ffmpeg...
 2024-11-12 07:24:51,510 | INFO: Recording saved as recordings\Recording_2024-11-12_07-23-49.mp4
 2024-11-12 07:24:51,510 | INFO: Total process time: 62.03601789474487
+2024-11-15 15:42:54,225 | INFO: generated new fontManager
+2024-11-15 15:43:00,308 | INFO: Running Adblock: True, Fullscreen: False, Show everything: True
+2024-11-15 15:43:00,308 | INFO: Download folder: D:\Scripts\engineering\Downloads
+2024-11-15 15:43:00,308 | INFO: Loading Adblock...
+2024-11-15 15:43:00,309 | INFO: Assumed Ublock crx path: D:\Scripts\engineering\ublock.crx
+2024-11-15 15:43:00,309 | INFO: Successfully loaded Adblock.
+2024-11-15 15:43:00,309 | INFO: ====== WebDriver manager ======
+2024-11-15 15:43:01,110 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-15 15:43:01,214 | INFO: Get LATEST chromedriver version for google-chrome
+2024-11-15 15:43:01,296 | INFO: Driver [C:\Users\x\.wdm\drivers\chromedriver\win64\130.0.6723.116\chromedriver-win32/chromedriver.exe] found in cache
+2024-11-15 15:43:03,666 | INFO: Cleaned up cache.
+2024-11-15 15:43:07,160 | INFO: Rejecting cookies.
+2024-11-15 15:43:07,297 | INFO: Clicked the 'Reject all' button (cookies).
+2024-11-15 15:44:14,415 | INFO: Clicked on the YouTube search bar.
+2024-11-15 15:44:14,823 | INFO: Typed 'floating darkness tatsh' in the search bar and submitted.
+2024-11-15 15:44:15,983 | INFO: Video results are loaded.
+2024-11-15 15:44:16,845 | INFO: Clicked on the first non-sponsored video.
+2024-11-15 15:44:16,845 | INFO: Checking for fullscreen.
+2024-11-15 15:44:57,420 | INFO: Opening link: https://www.youtube.com/watch?v=-Djq3QihTyA
+2024-11-15 15:44:57,420 | INFO: Starting monitor thread
+2024-11-15 15:44:57,420 | INFO: Started popup monitor.
+2024-11-15 15:44:57,549 | INFO: The video is displayed.
+2024-11-15 15:45:55,533 | INFO: Clicked input bar
+2024-11-15 15:45:55,533 | INFO: Typing URL.
+2024-11-15 15:45:55,619 | INFO: Clicked on dropdown
+2024-11-15 15:45:55,665 | INFO: Selected MP4 format
+2024-11-15 15:45:55,708 | INFO: Clicked convert
+2024-11-15 15:45:55,709 | INFO: Loading gif.
+2024-11-15 15:45:58,830 | INFO: Looking for latest file in: D:\Scripts\engineering\Downloads
+2024-11-15 15:46:11,225 | INFO: Opening editor.
+2024-11-15 15:46:11,717 | INFO: Attempting to send D:\Scripts\engineering\Downloads\You have no enemies. - bearky (1080p, h264).mp4 to the editor.
+2024-11-15 15:46:11,740 | INFO: Editor ready.
+2024-11-15 15:46:11,740 | INFO: Maximizing window.
+2024-11-15 15:48:00,763 | INFO: Clicked on the YouTube search bar.
+2024-11-15 15:48:02,238 | INFO: Video results are loaded.
+2024-11-15 15:48:03,099 | INFO: Clicked on the first non-sponsored video.
+2024-11-15 15:48:03,099 | INFO: Checking for fullscreen.
+2024-11-15 15:48:32,350 | INFO: Starting recording.
+2024-11-15 15:48:32,351 | INFO: Q pressed, stopping recording.
+2024-11-15 15:48:32,352 | INFO: Recording for 15 seconds...
+2024-11-15 15:48:46,593 | INFO: Actual FPS during recording: 44.38
+2024-11-15 15:48:46,593 | INFO: Time since recording started: 14.240655422210693
+2024-11-15 15:49:02,941 | INFO: Assembling video with ffmpeg...
+2024-11-15 15:49:20,148 | INFO: Deleted audio file: Recordings\out.mp3
+2024-11-15 15:49:20,148 | INFO: Recording saved as Recordings\Recording_2024-11-15_15-48-32.mp4
+2024-11-15 15:49:20,148 | INFO: Total process time: 47.79589653015137
+2024-11-15 15:49:21,980 | INFO: Lowest Volume (dB): 0.00 dB
+2024-11-15 15:49:21,980 | INFO: Highest Peak (dB): 62.33 dB
+2024-11-15 15:49:21,980 | INFO: Average Volume (dB): 50.97 dB

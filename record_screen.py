@@ -11,17 +11,17 @@ from concurrent.futures import ThreadPoolExecutor
 import warnings
 from log import logger
 import keyboard
+from audio_measure import *
 
 
 def record_screen(record_time):
     # Prevent audio recorder warning spam
     warnings.filterwarnings("ignore")
 
-    record_duration = record_time
-    output_folder = "Recordings"
-
+    # Prepare the hotkey stopping event
     stop_recording = threading.Event() 
 
+    output_folder = "Recordings"
     # Create the output folder if it doesn't exist
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -32,9 +32,8 @@ def record_screen(record_time):
     # Get screen details
     screen = sct.monitors[1]
 
-    # Store frames and timestamps
+    # Store frames
     frames = []
-    timestamps = []
 
     # Stop recording by pressing Q
     def stop_recording_listener():
@@ -49,7 +48,7 @@ def record_screen(record_time):
     # Record audio 
     # Not recommended to change these
     # I spent a while finding the one that glitches the least with this library
-    def record_audio(output_file=os.path.join(output_folder, "out.mp3"), record_sec=record_duration, sample_rate=44100, chunk_duration=1):
+    def record_audio(output_file=os.path.join(output_folder, "out.mp3"), record_sec=record_time, sample_rate=44100, chunk_duration=1):
         data = []
         with sc.get_microphone(id=str(sc.default_speaker().name), include_loopback=True).recorder(samplerate=sample_rate) as mic:
             for _ in range(int(record_sec // chunk_duration)):
@@ -63,19 +62,17 @@ def record_screen(record_time):
         sf.write(file=output_file, data=full_data, samplerate=sample_rate)
 
     # Set up audio recording in a separate thread
-    audio_thread = threading.Thread(target=record_audio, args=(os.path.join(output_folder, "out.mp3"), record_duration))
+    audio_thread = threading.Thread(target=record_audio, args=(os.path.join(output_folder, "out.mp3"), record_time))
 
     # Start video recording
     start_time = time.time()
-    logger.info(f"Recording for {record_duration} seconds...")
+    logger.info(f"Recording for {record_time} seconds...")
 
     audio_thread.start()
     try:
-        while time.time() - start_time < record_duration:
+        while time.time() - start_time < record_time:
             if stop_recording.is_set():
                 break
-            current_time = time.time() - start_time
-            timestamps.append(current_time)
 
             # Capture frame and convert it from BGRA to BGR for higher color accuracy 
             img = sct.grab(screen)
@@ -97,11 +94,13 @@ def record_screen(record_time):
     fps = len(frames) / elapsed_time
     logger.info(f"Actual FPS during recording: {fps:.2f}")
     logger.info(f"Time since recording started: {elapsed_time}")
+    logger.info("Starting video processing...")
 
     # Save frames to disk in the specific folder
     frames_dir = os.path.join(output_folder, "frames")
     if not os.path.exists(frames_dir):
         os.makedirs(frames_dir)
+    logger.info("Created temp directory to save frames to.")
 
     # Optimized frame saving process using ThreadPoolExecutor
     # This sped up the processing time by 3x
@@ -121,6 +120,7 @@ def record_screen(record_time):
     # Assemble video from frames using ffmpeg
     current_time_str = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime(start_time))
     output_video_file = os.path.join(output_folder, f"Recording_{current_time_str}.mp4")
+    logger.info("Saved video as: Recording_{current_time_str}.mp4")
     logger.info("Assembling video with ffmpeg...")
 
     # Use ffmpeg to combine video and audio into one file
@@ -130,7 +130,7 @@ def record_screen(record_time):
         "-framerate", str(fps),                    
         "-i", f"{frames_dir}/frame_%04d.png",      # Frame file path pattern
         "-i", os.path.join(output_folder, "out.mp3"),
-        "-t", str(record_duration),                # Ensure exact video duration
+        "-t", str(record_time),                # Ensure exact video duration
         "-vf", "setpts=PTS-STARTPTS",              # Accurate playback timing
         "-r", str(fps),                            # Set output video frame rate
         "-c:v", "libx264",                         # Video codec
@@ -156,3 +156,4 @@ def record_screen(record_time):
 
     logger.info(f"Recording saved as {output_video_file}")
     logger.info(f"Total process time: {time.time()-start_time}")
+    return(output_video_file)

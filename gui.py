@@ -168,9 +168,3 @@ class YouTubeApp(ctk.CTk):
     def is_valid_youtube_url(self, url):
         pattern = r"(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})"
         return re.match(pattern, url)
-
-
-if __name__ == "__main__":
-    # Might move to main later
-    app = YouTubeApp()
-    app.mainloop()

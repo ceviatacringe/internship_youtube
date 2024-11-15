@@ -1,0 +1,3 @@
+Lowest Volume (dB): 0.00 dB
+Highest Peak (dB): 62.33 dB
+Average Volume (dB): 50.97 dB

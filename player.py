@@ -7,7 +7,9 @@ import win32con
 import threading
 from log import logger
 import pygetwindow as gw
+from audio_measure import *
 from selenium import webdriver
+from record_screen import record_screen
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
@@ -16,12 +18,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from record_screen import record_screen
 
 
 class YouTubeAutomation:
     def __init__(self, adblock=True, fullscreen=False, showall=False):
-        self.unavailable = True # If the vide o is private/invalid url/deleted
+        self.unavailable = True # If the video is private/invalid url/deleted
         self.driver = None
         self.window = None
         self.showall = showall
@@ -53,7 +54,6 @@ class YouTubeAutomation:
             # Configure settings
         logger.info(f"Download folder: {self.download_folder}")
         self.chrome_options.add_argument("--start-minimized")
-        #self.chrome_options.add_argument("--disable-gpu")
         self.chrome_options.add_argument("--disable-infobars")
         self.chrome_options.add_argument("--enable-automation")
         #If you want to change the name, also changed the getWindowsWithTitle below
@@ -87,7 +87,7 @@ class YouTubeAutomation:
         self.driver.get('https://www.youtube.com/')
         logger.info("Rejecting cookies.")
         self.reject_cookies()
-        # Give adblock a bit more time to load on slower systems
+
 
 
     def start_video(self, link):
@@ -135,6 +135,7 @@ class YouTubeAutomation:
             self.driver.get("https://www.youtube.com/")
         try:
             # Find and click search bar
+            time.sleep(1.5)
             search_bar = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.NAME, "search_query"))
             )
@@ -172,7 +173,10 @@ class YouTubeAutomation:
         if self.firstlink:
             self.show_window()
             self.firstlink = False
+        logger.info("Checking for fullscreen.")
         if self.fullscreen:
+            logger.info("Fullscreening.")
+            time.sleep(0.5)
             self.driver.find_element(By.TAG_NAME, 'body').send_keys('f')
 
 
@@ -218,17 +222,17 @@ class YouTubeAutomation:
         """
         try:
             # Wait for the element to be visible
-            element = WebDriverWait(self.driver, 2).until(
+            element = WebDriverWait(self.driver, 7).until(
                 EC.visibility_of_element_located((By.ID, 'channel-name'))
             )
             
             # Check if the element is displayed
             if element.is_displayed():
                 self.unavailable = False
-                logger.info("The element is displayed.")
+                logger.info("The video is displayed.")
             else:
                 self.unavailable = True
-                logger.info("The element is not displayed.")
+                logger.info("The video is not displayed.")
         
         except TimeoutException:
             self.unavailable = True
@@ -248,7 +252,6 @@ class YouTubeAutomation:
             logger.info("Fully hiding window.")
 
     def show_window(self):
-        self.window.activate()
         """
         Restores and maximizes the Chrome window, and brings it to the foreground.
         """
@@ -349,17 +352,29 @@ class YouTubeAutomation:
             return
         # Wait for the download button to appear
         try:
-            # Wait for the dropdown button to be clickable and click it
-            quality_display = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.ID, "quality-select-display"))
-            )
+            try:
+                # Wait for the dropdown button to be clickable and click it
+                quality_display = WebDriverWait(self.driver, 3).until(
+                    EC.element_to_be_clickable((By.ID, "quality-select-display"))
+                )
+            # They really like changing class names on this site for some reason
+            except (TimeoutError, NoSuchElementException):
+                quality_display = WebDriverWait(self.driver, 3).until(
+                    EC.element_to_be_clickable((By.ID, "format-select-list"))
+                ) 
             quality_display.click()  # Open the dropdown
             logger.info("Clicked on dropdown")
-            mp4_option = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//div[@class='quality-select-options' and text()='MP4']"))
-            )
-            mp4_option.click()  # Select the MP4 option
-            logger.info("Selected MP4")
+            # Select the quality from the dropdown menu
+            try: 
+                mp4_option = WebDriverWait(self.driver, 3).until(
+                    EC.element_to_be_clickable((By.XPATH, "//div[@class='quality-select-options' and text()='MP4']"))
+                )
+            except (TimeoutError, NoSuchElementException):
+                mp4_option = WebDriverWait(self.driver, 3).until(
+                    EC.element_to_be_clickable((By.XPATH, "//div[@class='format-select-options' and text()='MP4']"))
+                )
+            mp4_option.click()  # Select MP4
+            logger.info("Selected MP4 format")
             convert_button = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.CLASS_NAME, "converter-button-container"))
             )
@@ -395,5 +410,21 @@ class YouTubeAutomation:
         # Reset window hider in case the user starts opening links again.
         self.firstlink == True
 
-    def record(self, recordtime):
-        record_screen(recordtime)
+    def record(self, recordtime,):
+        if self.unavailable:
+            logger.info("The video is unavailable, cancelling recording.")
+        else:
+            logger.info("Starting recording.")
+            measure_audio(record_screen(recordtime))
+
+    def full_auto(self, keyword, recordtime):
+        """
+        I didn't want to make this originally, but you insisted that you wanted
+        the script to be fully automatic, so I added an option for that here.
+        """
+        self.initialize_driver()
+        time.sleep(1)
+        self.youtube_search(keyword)
+        self.check_available()
+        self.record(recordtime)
+        self.clean_up()
