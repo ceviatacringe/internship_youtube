@@ -36,7 +36,7 @@ class YouTubeAutomation:
         self.firstlink = True # Keep browser hidden till first link is requested
         logger.info(f"Running Adblock: {self.adblock}, Fullscreen: {self.fullscreen}, Show everything: {self.showall}")
 
-    def initialize_driver(self):
+    def initialize_driver(self) -> None:
         """
         Preloads the driver for a smooother run and adds Ublock Origin.
         """
@@ -90,7 +90,7 @@ class YouTubeAutomation:
 
 
 
-    def start_video(self, link):
+    def start_video(self, link:str) -> None:
         """
         Check if the video is available, then start playing it if it doesn't start automatically.
         """
@@ -124,7 +124,7 @@ class YouTubeAutomation:
                 logger.info("Unable to find play button.")
 
 
-    def youtube_search(self, keyword):
+    def youtube_search(self, keyword:str) -> None:
         # Start the popup monitor thread
         if not hasattr(self, "popup_monitor_thread") and not self.adblock:
             self.popup_monitor_thread = threading.Thread(target=self.monitor_ads)
@@ -180,7 +180,7 @@ class YouTubeAutomation:
             self.driver.find_element(By.TAG_NAME, 'body').send_keys('f')
 
 
-    def reject_cookies(self):
+    def reject_cookies(self) -> None:
         """
         Waits for the 'Reject all' button on YouTube to be clickable and clicks it.
         """
@@ -197,7 +197,7 @@ class YouTubeAutomation:
             logger.info(f"Error in cookie reject: {e}")
 
 
-    def monitor_ads(self):
+    def monitor_ads(self) -> None:
         logger.info("Started popup monitor.")
         while True:
             time.sleep(0.3)
@@ -216,7 +216,7 @@ class YouTubeAutomation:
                         pass
 
 
-    def check_available(self):
+    def check_available(self) -> None:
         """
         Checks if the current video is private by searching for the specific element.
         """
@@ -243,7 +243,7 @@ class YouTubeAutomation:
             logger.info(f"An error occurred: {e}")
 
 
-    def hide_window(self):
+    def hide_window(self) -> None:
         """
         Completely hides the window.
         """
@@ -251,7 +251,7 @@ class YouTubeAutomation:
             win32gui.ShowWindow(self.window._hWnd, win32con.SW_HIDE)
             logger.info("Fully hiding window.")
 
-    def show_window(self):
+    def show_window(self) -> None:
         """
         Restores and maximizes the Chrome window, and brings it to the foreground.
         """
@@ -277,7 +277,7 @@ class YouTubeAutomation:
                 logger.error(f"Error in show_window: {e}")
 
 
-    def clean_up(self):
+    def clean_up(self) -> None:
         """
         Deletes all cookies and closes the browser session.
         """
@@ -294,7 +294,7 @@ class YouTubeAutomation:
         self.driver = None
 
 
-    def get_latest_download(self, checktime) -> str:
+    def get_latest_download(self, checktime:int) -> None:
         """
         Get the last downloaded file name (from the script's download folder),
         Loop check it until the download is complete, then return.
@@ -328,7 +328,7 @@ class YouTubeAutomation:
                     time.sleep(checktime)  # Wait before checking again
 
 
-    def download(self, link):
+    def download(self, link:str) -> None:
         """
         Download video to this script/exe's folder using a site convertor,
         Then put it up in online-video-cutter for editing.
@@ -410,14 +410,14 @@ class YouTubeAutomation:
         # Reset window hider in case the user starts opening links again.
         self.firstlink == True
 
-    def record(self, recordtime,):
+    def record(self, recordtime:int) -> None:
         if self.unavailable:
             logger.info("The video is unavailable, cancelling recording.")
         else:
             logger.info("Starting recording.")
             measure_audio(record_screen(recordtime))
 
-    def full_auto(self, keyword, recordtime):
+    def full_auto(self, keyword:str, recordtime:int) -> None:
         """
         I didn't want to make this originally, but you insisted that you wanted
         the script to be fully automatic, so I added an option for that here.

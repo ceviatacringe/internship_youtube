@@ -28,7 +28,7 @@ def calculate_dB_levels(audio_file):
     peak_db = rms_to_db(np.max(np.abs(audio_data.astype(np.float32))))  # Highest peak
     average_db = rms_to_db(rms_values)  # Average level
     
-    # Filter out silent periods by setting a threshold (e.g., 1e-6)
+    # Filter out silent periods by setting a threshold
     threshold = 1e-6
     non_silent_audio = audio_data[np.abs(audio_data) > threshold]
 

@@ -14,7 +14,7 @@ import keyboard
 from audio_measure import *
 
 
-def record_screen(record_time):
+def record_screen(record_time:int) -> str:
     # Prevent audio recorder warning spam
     warnings.filterwarnings("ignore")
 
